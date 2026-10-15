@@ -4,7 +4,7 @@ Fecha de verificación: 15 de octubre de 2026 (UTC/COT).
 
 ## Acceso a GitHub
 
-El conector GitHub aparece disponible en el directorio, pero `installed=false`; en esta conversación tampoco se expusieron operaciones de repositorio. Por tanto, no hay autorización/conexión efectiva para consultar o crear repositorios. No se creó ningún repositorio.
+En la primera comprobación de esta etapa, el conector aún no estaba instalado. Tras la conexión, se confirmó el perfil `iaorganiza2020`. Ya existía el repositorio `iaorganiza2020/monitor-juridico-colombia`, vacío y público; no fue creado por este proceso. El usuario decidió conservarlo público y se publicaron los nueve archivos del proyecto. La lectura de vuelta confirmó que los nueve contenidos remotos coinciden exactamente con los archivos locales.
 
 ## Fuentes oficiales revisadas
 
@@ -24,9 +24,10 @@ No fue posible verificar `robots.txt`, condiciones de rastreo ni endpoints inter
 | Registros emitidos por esa ejecución | 0; resultado parcial y errores guardados, sin fabricar registros |
 | Validación de texto íntegro | Los boletines quedan clasificados como referencia; no se reporta texto íntegro disponible |
 | Validación de vigencia normativa | No se emite estado de vigencia a partir de una mención en un catálogo |
+| Publicación en GitHub | 9 archivos publicados en `main`; lectura de vuelta de los 9 archivos coincide con el proyecto local |
 
 La falla HTTP parece propia del entorno de ejecución, ya que las páginas oficiales se pudieron revisar mediante el buscador web. No demuestra indisponibilidad pública de los portales ni disponibilidad de los mismos desde GitHub Actions. La conectividad debe probarse en el entorno de despliegue antes de considerar operativo cualquier extractor.
 
 ## Criterio para cerrar la etapa
 
-La estructura del proyecto y cuatro pruebas locales funcionan. La etapa 1 **todavía no queda validada de extremo a extremo**: falta una conexión GitHub instalada/autorizada, autorización explícita para crear el repositorio privado y una ejecución de los extractores con acceso HTTP real desde un entorno autorizado. La etapa no se considera lista para pasar a Supabase.
+La estructura del proyecto, cuatro pruebas locales y la publicación en GitHub funcionan. La etapa 1 **todavía no queda validada de extremo a extremo**: falta ejecutar los extractores desde un entorno con acceso HTTP a las fuentes oficiales y confirmar sus respuestas reales. No se considera lista para pasar a Supabase hasta resolver esa prueba.
