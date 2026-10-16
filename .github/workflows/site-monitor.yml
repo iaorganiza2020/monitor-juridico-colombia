@@ -1,0 +1,25 @@
+name: Monitor jurídico del Site privado
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # 07:00 America/Bogota; GitHub cron se expresa en UTC.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-monitor-juridico
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SITE_ACCESS_TOKEN: ${{ secrets.SITE_ACCESS_TOKEN }}
+      MONITOR_JOB_SECRET: ${{ secrets.MONITOR_JOB_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ejecutar revisión autenticada
+        run: python3 scripts/trigger_site_monitor.py
