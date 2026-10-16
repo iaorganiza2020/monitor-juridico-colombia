@@ -1,6 +1,6 @@
-# Monitor jurídico Colombia — etapa 1
+# Monitor jurídico Colombia
 
-Extractores conservadores y de solo lectura para preparar un monitor jurídico. Se integra después con la Skill privada **El juez cabrón | Colombia** (v1.1.0); este proyecto no la reemplaza ni modifica sus instrucciones.
+Extractores conservadores y de solo lectura para preparar un monitor jurídico. Se integra con el Site privado y su Skill **El juez cabrón | Colombia**. El repositorio público solo contiene código de consulta y programación; no almacena credenciales ni documentos privados.
 
 ## Alcance actual
 
@@ -43,9 +43,17 @@ Las pruebas unitarias comprueban el tratamiento de metadatos/estados; no simulan
 
 - El runtime de trabajo no pudo establecer conexiones HTTP directas a los portales; las consultas web oficiales sí devolvieron páginas y resultados. La prueba `--probe` en un runner autorizado es necesaria antes de declarar operativos los extractores en red.
 - Falta confirmar la forma técnica/condiciones de consulta de buscadores dinámicos y documentos originales; si no hay endpoint estable y permitido, usar descarga manual o fuentes oficiales con API/feeds habilitados.
-- Aún no hay base persistente, Supabase, servidor MCP, programación diaria, credenciales ni automatización GitHub.
+- El Site tiene D1 y MCP. El flujo de GitHub Actions requiere los secretos y una ejecución manual comprobada; el YAML por sí solo no acredita una programación operativa.
 - Nunca se almacena material confidencial de expedientes del usuario.
 
 ## Historial y cambios
 
 Los extractores versionan el formato JSON; los datos históricos se guardarán de forma append-only en una etapa posterior. Ninguna actualización del monitor cambiará automáticamente la Skill ni declarará cambio de precedente sin análisis jurídico humano.
+
+## Programador del Site privado (pendiente de validación operativa)
+
+`.github/workflows/site-monitor.yml` define `workflow_dispatch` y `0 12 * * *` UTC (07:00 de Bogotá). Invoca `scripts/trigger_site_monitor.py`, que llama la ruta `/api/internal/monitor/run` del Site privado por HTTPS. El despacho de Sites exige `SITE_ACCESS_TOKEN` y la ruta exige una firma HMAC-SHA256 con `MONITOR_JOB_SECRET`, fecha de cinco minutos y un identificador de ejecución único. D1 registra los intentos autenticados y bloquea duplicados. El monitor existente conserva su bloqueo de simultaneidad. Ninguno de estos secretos debe entrar al repositorio ni a los logs.
+
+Configurar **en GitHub → Settings → Secrets and variables → Actions** los secretos `SITE_ACCESS_TOKEN` (acceso de servicio proporcionado por Sites) y `MONITOR_JOB_SECRET` (secreto aleatorio de al menos 32 bytes). Configurar el mismo `MONITOR_JOB_SECRET` como secreto de producción del Site y volver a desplegar la versión guardada para aplicar la revisión del entorno. Mantener el Site privado. No publicar los valores.
+
+Después, ejecutar manualmente el flujo desde Actions. Comprobar en D1 `monitor_dispatches`, `monitor_runs`, `source_checks` y `monitor_schedule`, y en MCP `estado_monitor`. El primer despacho manual solo deja `pending_first_scheduled_run`; `active` se registra únicamente tras un evento `schedule` auténtico y una ejecución almacenada. Los eventos de GitHub pueden retrasarse, especialmente al inicio de la hora. Un despliegue o un workflow presente en el repositorio no sustituyen la prueba de ejecución.
